@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: blog-application
+  datasource:
+    username: admin
+    password: Password@123
+    url: jdbc:mysql://localhost:3306/blog_db
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+
+    hibernate:
+      ddl-auto: update
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG

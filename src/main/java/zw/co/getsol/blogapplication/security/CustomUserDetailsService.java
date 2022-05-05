@@ -31,12 +31,10 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userRepository.findByUsernameOrEmail(usernameOrEmail,usernameOrEmail)
                 .orElseThrow(()-> new RecordNotFoundException("User {0} not found"));
         List<UserRole> roles = userRoleRepository.findAllByUser(user);
-        List<Role> roleList = new ArrayList<>();
-        roles.stream().map(userRole -> roleList.add(userRole.getRole()));
-        return new org.springframework.security.core.userdetails.User(user.getEmail(),user.getPassword(),mapRolesToAuthorities(roleList));
 
-    }
-    private Collection<? extends GrantedAuthority> mapRolesToAuthorities(List<Role> roles){
-       return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+        return new org.springframework.security.core.userdetails.User(user.getEmail(),
+                user.getPassword(), roles.stream()
+                .map(userRole -> new SimpleGrantedAuthority(userRole.getRole().getName()))
+                .collect(Collectors.toSet()));
     }
 }

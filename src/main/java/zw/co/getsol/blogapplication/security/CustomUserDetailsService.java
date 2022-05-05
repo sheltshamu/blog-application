@@ -10,6 +10,7 @@ import zw.co.getsol.blogapplication.domain.Role;
 import zw.co.getsol.blogapplication.domain.User;
 import zw.co.getsol.blogapplication.domain.UserRole;
 import zw.co.getsol.blogapplication.exceptions.RecordNotFoundException;
+import zw.co.getsol.blogapplication.persistence.UserRepository;
 import zw.co.getsol.blogapplication.persistence.UserRoleRepository;
 
 import java.util.*;
@@ -18,22 +19,21 @@ import java.util.stream.Collectors;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
     private final UserRoleRepository userRoleRepository;
+    private final UserRepository userRepository;
 
-    public CustomUserDetailsService(UserRoleRepository userRoleRepository) {
+    public CustomUserDetailsService(UserRoleRepository userRoleRepository, UserRepository userRepository) {
         this.userRoleRepository = userRoleRepository;
+        this.userRepository = userRepository;
     }
 
-
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<UserRole> userRole = Optional.ofNullable(userRoleRepository.findByUserUsername(username));
-        if (!userRole.isPresent()){
-            throw new RecordNotFoundException("Username {0} not found");
-        }
-        User user = userRole.get().getUser();
-        List<Role> roles = new ArrayList<>();
-        roles.add(userRole.get().getRole());
-        return new org.springframework.security.core.userdetails.User(user.getEmail(),user.getPassword(),mapRolesToAuthorities(roles));
+    public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
+        User user = userRepository.findByUsernameOrEmail(usernameOrEmail,usernameOrEmail)
+                .orElseThrow(()-> new RecordNotFoundException("User {0} not found"));
+        List<UserRole> roles = userRoleRepository.findAllByUser(user);
+        List<Role> roleList = new ArrayList<>();
+        roles.stream().map(userRole -> roleList.add(userRole.getRole()));
+        return new org.springframework.security.core.userdetails.User(user.getEmail(),user.getPassword(),mapRolesToAuthorities(roleList));
 
     }
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(List<Role> roles){

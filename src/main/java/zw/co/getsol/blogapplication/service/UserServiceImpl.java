@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import zw.co.getsol.blogapplication.domain.Role;
 import zw.co.getsol.blogapplication.domain.User;
 import zw.co.getsol.blogapplication.domain.UserRole;
@@ -40,11 +41,10 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    @Transactional
     public UserDto create(SignUpRequest signUpRequest) {
-       // Optional<User> user = userRepository.findByUsernameOrEmail(signUpRequest,)
         Role role = roleRepository.findByName("USER")
                 .orElseThrow(()-> new RecordNotFoundException("Role does not exist !"));
-
         User user = new User();
         user.setDateCreated(LocalDateTime.now());
         user.setDateModified(LocalDateTime.now());

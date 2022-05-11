@@ -1,6 +1,5 @@
 package zw.co.getsol.blogapplication.security;
 
-import jdk.nashorn.internal.parser.Token;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;

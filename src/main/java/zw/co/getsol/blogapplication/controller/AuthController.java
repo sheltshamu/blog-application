@@ -1,5 +1,6 @@
 package zw.co.getsol.blogapplication.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,12 +23,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/auth")
+@Tag(name = "Authentication Controller",description = "Authentication Endpoints")
 public class AuthController {
     private final UserService userService;
-
     private final RoleService roleService;
     private final AuthenticationManager authenticationManager;
-
     private final JwtTokenProvider tokenProvider;
 
     @Autowired
@@ -54,15 +54,15 @@ public class AuthController {
         return ResponseEntity.ok(userService.create(signUpRequest));
     }
 
-   // @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping
-    public ResponseEntity<RoleDto> create(@RequestBody RoleRequest roleRequest){
-        return ResponseEntity.ok(roleService.create(roleRequest));
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping
-    public ResponseEntity<List<RoleDto>> getAllRoles(){
-        return ResponseEntity.ok(roleService.getAllRoles());
-    }
+//   // @PreAuthorize("hasRole('ADMIN')")
+//    @PostMapping
+//    public ResponseEntity<RoleDto> create(@RequestBody RoleRequest roleRequest){
+//        return ResponseEntity.ok(roleService.create(roleRequest));
+//    }
+//
+//    @PreAuthorize("hasRole('ADMIN')")
+//    @GetMapping
+//    public ResponseEntity<List<RoleDto>> getAllRoles(){
+//        return ResponseEntity.ok(roleService.getAllRoles());
+//    }
 }

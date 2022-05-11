@@ -1,5 +1,8 @@
 package zw.co.getsol.blogapplication.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import zw.co.getsol.blogapplication.domain.Comment;
 import zw.co.getsol.blogapplication.dto.CommentDto;
 import zw.co.getsol.blogapplication.exceptions.RecordNotFoundException;
@@ -10,7 +13,7 @@ import zw.co.getsol.blogapplication.request.CommentUpdateRequest;
 
 import java.time.LocalDateTime;
 
-public class CommentServiceImpl implements CommentService{
+public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
 
@@ -32,9 +35,9 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public CommentDto edit(Long id,CommentUpdateRequest commentUpdateRequest) {
+    public CommentDto edit(Long id, CommentUpdateRequest commentUpdateRequest) {
         Comment comment = commentRepository.findById(id)
-                .orElseThrow(()-> new RecordNotFoundException("Comment {0} not found"));
+                .orElseThrow(() -> new RecordNotFoundException("Comment {0} not found"));
         comment.setName(commentUpdateRequest.getName());
         comment.setBody(commentUpdateRequest.getBody());
         comment.setEmail(commentUpdateRequest.getEmail());
@@ -45,7 +48,17 @@ public class CommentServiceImpl implements CommentService{
     @Override
     public void delete(Long commentId) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(()-> new RecordNotFoundException("Comment {0} not found"));
+                .orElseThrow(() -> new RecordNotFoundException("Comment {0} not found"));
         commentRepository.delete(comment);
+    }
+
+    @Override
+    public Page<CommentDto> findByPostId(Long postId, int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<Comment> comments = commentRepository.findAllByPostId(postId);
+        return comments.map(comment -> {
+                    CommentDto commentDto = new CommentDto(comment);
+                    return commentDto;
+                });
     }
 }

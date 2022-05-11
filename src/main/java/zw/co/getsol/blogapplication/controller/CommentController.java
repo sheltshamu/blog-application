@@ -2,6 +2,7 @@ package zw.co.getsol.blogapplication.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import zw.co.getsol.blogapplication.dto.CommentDto;
@@ -23,6 +24,12 @@ public class CommentController {
     @PutMapping("/{commentId}")
     public ResponseEntity<CommentDto> update(@PathVariable Long commentId, @RequestBody CommentUpdateRequest commentUpdateRequest){
         return ResponseEntity.ok(commentService.edit(commentId,commentUpdateRequest));
+    }
+    @GetMapping("/{postId}")
+    public ResponseEntity<Page<CommentDto>> findByPostId(@PathVariable Long postId,
+                                                         @RequestParam(defaultValue ="0",required = false)int pageNo,
+                                                         @RequestParam(defaultValue = "20",required = false) int pageSize){
+        return ResponseEntity.ok(commentService.findByPostId(postId,pageNo,pageSize));
     }
     @DeleteMapping("/{commentId}")
     public void delete(@PathVariable Long commentId){

@@ -1,6 +1,5 @@
 package zw.co.getsol.blogapplication.controller;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +12,6 @@ import zw.co.getsol.blogapplication.service.CommentService;
 @RestController
 @RequestMapping("/api/comments/")
 @RequiredArgsConstructor
-@Tag(name = "Comments Controller",description = "Comments Endpoints")
 public class CommentController {
     private final CommentService commentService;
 

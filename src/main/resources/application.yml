@@ -16,6 +16,8 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+  main:
+    allow-circular-references: true
 logging:
   level:
     org:

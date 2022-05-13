@@ -1,29 +1,25 @@
 package zw.co.getsol.blogapplication.controller;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import zw.co.getsol.blogapplication.dto.JwtAuthResponse;
-import zw.co.getsol.blogapplication.dto.RoleDto;
 import zw.co.getsol.blogapplication.dto.UserDto;
 import zw.co.getsol.blogapplication.request.LoginRequest;
-import zw.co.getsol.blogapplication.request.RoleRequest;
 import zw.co.getsol.blogapplication.request.SignUpRequest;
 import zw.co.getsol.blogapplication.security.JwtTokenProvider;
 import zw.co.getsol.blogapplication.service.RoleService;
 import zw.co.getsol.blogapplication.service.UserService;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/auth")
-@Tag(name = "Authentication Controller",description = "Authentication Endpoints")
 public class AuthController {
     private final UserService userService;
     private final RoleService roleService;

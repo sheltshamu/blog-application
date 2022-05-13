@@ -54,15 +54,4 @@ public class AuthController {
         return ResponseEntity.ok(userService.create(signUpRequest));
     }
 
-//   // @PreAuthorize("hasRole('ADMIN')")
-//    @PostMapping
-//    public ResponseEntity<RoleDto> create(@RequestBody RoleRequest roleRequest){
-//        return ResponseEntity.ok(roleService.create(roleRequest));
-//    }
-//
-//    @PreAuthorize("hasRole('ADMIN')")
-//    @GetMapping
-//    public ResponseEntity<List<RoleDto>> getAllRoles(){
-//        return ResponseEntity.ok(roleService.getAllRoles());
-//    }
 }

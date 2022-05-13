@@ -1,5 +1,6 @@
 package zw.co.getsol.blogapplication.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/posts/")
 @RequiredArgsConstructor
+@Tag(name = "Post Controller",description = "Post Endpoints")
 public class PostController {
     private final  PostService postService;
 

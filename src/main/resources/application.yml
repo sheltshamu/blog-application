@@ -13,12 +13,16 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 logging:
   level:
     org:
       springframework:
         security: DEBUG
-
+server:
+  forward-headers-strategy: framework
 app:
   jwt-expiration-milliseconds: '3600000'
   jwt-secret: JWTSecretKey

@@ -1,8 +1,8 @@
 package zw.co.getsol.blogapplication.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -17,30 +17,28 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import zw.co.getsol.blogapplication.security.CustomUserDetailsService;
 import zw.co.getsol.blogapplication.security.JwtAuthenticationEntryPoint;
 import zw.co.getsol.blogapplication.security.JwtAuthenticationFilter;
-import zw.co.getsol.blogapplication.security.JwtTokenProvider;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private final CustomUserDetailsService customUserDetailsService;
 
-    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final CustomUserDetailsService userDetailsService;
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtAuthenticationEntryPoint authenticationEntryPoint;
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    public SecurityConfig(CustomUserDetailsService customUserDetailsService, JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint, JwtTokenProvider jwtTokenProvider, JwtAuthenticationFilter jwtAuthenticationFilter) {
-        this.customUserDetailsService = customUserDetailsService;
-        this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
-        this.jwtTokenProvider = jwtTokenProvider;
+    @Autowired
+    public SecurityConfig(CustomUserDetailsService userDetailsService, JwtAuthenticationEntryPoint authenticationEntryPoint, JwtAuthenticationFilter jwtAuthenticationFilter) {
+        this.userDetailsService = userDetailsService;
+        this.authenticationEntryPoint = authenticationEntryPoint;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
+
     @Bean
-    @Primary
-     public PasswordEncoder passwordEncoder(){
+    PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
 
@@ -49,7 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .exceptionHandling()
-                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .authenticationEntryPoint(authenticationEntryPoint)
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -61,17 +59,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/swagger-ui/**").permitAll()
                 .antMatchers("/webjars/**").permitAll()
                 .antMatchers("/swagger-resources/**").permitAll()
-                .antMatchers("/api-docs/**").permitAll()
+                .antMatchers("/v3/api-docs/**").permitAll()
                 .anyRequest()
                 .authenticated();
-
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(userDetailsService)
+                .passwordEncoder(passwordEncoder());
     }
 
     @Override
@@ -79,4 +76,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
+
 }

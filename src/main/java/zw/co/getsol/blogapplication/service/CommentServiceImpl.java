@@ -55,7 +55,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Page<CommentDto> findByPostId(Long postId, int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
-        Page<Comment> comments = commentRepository.findAllByPostId(postId);
+        Page<Comment> comments = commentRepository.findAllByPostId(postId,pageable);
         return comments.map(comment -> {
                     CommentDto commentDto = new CommentDto(comment);
                     return commentDto;
